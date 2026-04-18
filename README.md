@@ -1,4 +1,4 @@
-# FairGig — Gig Worker Income & Rights Platform
+# FairGig — Gig Worker Income and Rights Platform
 
 **SOFTEC 2026 Web Dev Competition submission.**
 A multi-service platform that lets gig workers in Pakistan log, verify, and understand their earnings across platforms, and gives labour advocates a dashboard to spot systemic unfairness at scale.
@@ -17,7 +17,7 @@ A multi-service platform that lets gig workers in Pakistan log, verify, and unde
 
 Each service is independently runnable with one command and has its own README. No Docker required.
 
-## One-shot bootstrap (recommended)
+## One-shot bootstrap
 
 From the repo root:
 
