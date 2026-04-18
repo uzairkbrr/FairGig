@@ -17,26 +17,6 @@ A multi-service platform that lets gig workers in Pakistan log, verify, and unde
 
 Each service is independently runnable with one command and has its own README. No Docker required.
 
-## Deploy to Render (one-click blueprint)
-
-This repo ships with a [`render.yaml`](render.yaml) Blueprint that deploys the full stack — 6 backend web services plus the frontend as a static site — to Render's free tier in one click.
-
-**Steps:**
-
-1. Push this repo to GitHub (or GitLab / Bitbucket).
-2. In the Render dashboard: **New + → Blueprint → pick the repo → Apply**.
-3. Render prompts for the four `sync: false` secrets the first time. Use the **same** value for the `JWT_SECRET`-shared field across every service that asks for it (it's declared on auth, earnings, grievance, analytics). Same rule for `INTERNAL_KEY` across earnings, anomaly, grievance, analytics, certificate. `CERT_SIGN_SECRET` is only on the certificate service.
-   - `JWT_SECRET` → any long random string (must be identical across services — they verify tokens locally)
-   - `INTERNAL_KEY` → any long random string (guards the internal bulk-export endpoints)
-   - `CERT_SIGN_SECRET` → any long random string (HMAC key for certificate stamps)
-4. First deploy takes ~5 min (pip + npm installs). Each service self-seeds demo data on first boot — visit the static-site URL (named `fairgig` in the blueprint) and log in with the demo accounts.
-
-**Free-tier gotchas:**
-
-- Web services sleep after 15 min of inactivity; the first request after sleep cold-starts in ~30 seconds. The static-site frontend is CDN-served and never sleeps.
-- The SQLite files are on ephemeral disks. When a service restarts (deploy, sleep-wake, etc.) the DB is wiped and the self-seeder repopulates the demo data. **Real user signups do not persist** across restarts. That's fine for a demo; attach a paid disk (from $0.25/month) if you want persistence.
-- Service-to-service URLs in `render.yaml` assume the names `fairgig-auth`, `fairgig-earnings`, …, `fairgig-anomaly`, `fairgig-analytics`, `fairgig-grievance`, `fairgig-certificate`. If Render appends a random suffix (only happens on a global name collision), edit the corresponding `*_URL` and `VITE_*_URL` env vars in the dashboard.
-
 ## One-shot bootstrap (recommended)
 
 From the repo root:
