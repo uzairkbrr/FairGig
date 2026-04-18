@@ -19,15 +19,16 @@ export default function AdvocateWorkers() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <h1 className="text-2xl font-bold">Workers</h1>
-        <input className="input max-w-xs" placeholder="Search name / city / category"
+        <input className="input sm:max-w-xs" placeholder="Search name / city / category"
                value={filter} onChange={(e) => setFilter(e.target.value)} />
       </div>
       {err && <Banner tone="bad">{err}</Banner>}
       {!workers ? <div className="text-slate-400">loading…</div> :
        visible.length === 0 ? <EmptyState title="No workers match" /> : (
         <Card>
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="text-left text-xs uppercase tracking-wider text-slate-500 border-b border-slate-200">
@@ -52,6 +53,7 @@ export default function AdvocateWorkers() {
               ))}
             </tbody>
           </table>
+          </div>
         </Card>
       )}
     </div>

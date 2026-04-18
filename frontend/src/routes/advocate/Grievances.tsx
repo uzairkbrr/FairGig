@@ -39,9 +39,9 @@ export default function AdvocateGrievances() {
   return (
     <div className="grid md:grid-cols-3 gap-6">
       <div className="md:col-span-2 space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <h1 className="text-2xl font-bold">Grievance board</h1>
-          <select className="input max-w-[180px]" value={filter} onChange={(e) => setFilter(e.target.value)}>
+          <select className="input sm:max-w-[180px]" value={filter} onChange={(e) => setFilter(e.target.value)}>
             <option value="all">All statuses</option>
             <option value="open">Open</option>
             <option value="escalated">Escalated</option>

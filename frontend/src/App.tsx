@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { AuthProvider, useAuth } from "./auth";
 import Layout from "./components/Layout";
+import Landing from "./routes/Landing";
 import Login from "./routes/Login";
 import Register from "./routes/Register";
 import Verify from "./routes/Verify";
@@ -23,9 +24,10 @@ function Protected({ roles, children }: { roles?: string[]; children: React.Reac
   return <>{children}</>;
 }
 
-function HomeRedirect() {
-  const { user } = useAuth();
-  if (!user) return <Navigate to="/login" replace />;
+function HomeRoute() {
+  const { user, loading } = useAuth();
+  if (loading) return <div className="p-10 text-center text-slate-400">loading…</div>;
+  if (!user) return <Landing />;
   if (user.role === "worker")   return <Navigate to="/dashboard" replace />;
   if (user.role === "verifier") return <Navigate to="/verifier" replace />;
   return <Navigate to="/advocate" replace />;
@@ -35,12 +37,11 @@ export default function App() {
   return (
     <AuthProvider>
       <Routes>
+        <Route path="/" element={<HomeRoute />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify" element={<Verify />} />
         <Route element={<Protected><Layout /></Protected>}>
-          <Route path="/" element={<HomeRedirect />} />
-
           <Route path="/dashboard" element={<Protected roles={["worker"]}><WorkerDashboard /></Protected>} />
           <Route path="/log"       element={<Protected roles={["worker"]}><LogShift /></Protected>} />
           <Route path="/shifts"    element={<Protected roles={["worker"]}><MyShifts /></Protected>} />

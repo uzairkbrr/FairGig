@@ -44,7 +44,7 @@ export default function AdvocateOverview() {
         <p className="text-sm text-slate-500">Systemic trends across the platform, refreshed every {20}s.</p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
         <StatCard label="Shifts logged"    value={data.kpis.total_shifts_logged} />
         <StatCard label="Verified shifts"  value={data.kpis.total_verified_shifts} tone="ok" />
         <StatCard label="Complaints"       value={data.kpis.total_complaints} />
@@ -94,6 +94,7 @@ export default function AdvocateOverview() {
           {zones.length === 0 ? (
             <EmptyState title="No income data yet" />
           ) : (
+            <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-xs uppercase tracking-wider text-slate-500 border-b border-slate-200">
@@ -122,6 +123,7 @@ export default function AdvocateOverview() {
                 ))}
               </tbody>
             </table>
+            </div>
           )}
         </Card>
 

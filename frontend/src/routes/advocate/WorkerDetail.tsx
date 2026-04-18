@@ -35,13 +35,13 @@ export default function WorkerDetail() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
           <div className="text-sm"><Link to="/advocate/workers" className="text-slate-500 hover:underline">← all workers</Link></div>
           <h1 className="text-2xl font-bold mt-1">{worker.name}</h1>
           <div className="text-sm text-slate-500">{worker.role} · {worker.city ?? "—"} · {worker.category ?? "—"} · {worker.email}</div>
         </div>
-        <a className="btn-secondary" target="_blank" rel="noreferrer" href={certificate.url(workerId, ninetyDaysAgo, today)}>Open certificate</a>
+        <a className="btn-secondary self-start" target="_blank" rel="noreferrer" href={certificate.url(workerId, ninetyDaysAgo, today)}>Open certificate</a>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

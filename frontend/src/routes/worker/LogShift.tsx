@@ -58,7 +58,7 @@ export default function LogShift() {
       <Card title="Log a shift" className="md:col-span-2">
         {err && <div className="mb-3"><Banner tone="bad">{err}</Banner></div>}
         {ok && <div className="mb-3"><Banner tone="ok">{ok}</Banner></div>}
-        <form onSubmit={submit} className="grid grid-cols-2 gap-4">
+        <form onSubmit={submit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field label="Platform">
             <select className="input" value={form.platform} onChange={update("platform")}>
               {PLATFORMS.map((p) => <option key={p}>{p}</option>)}
@@ -79,12 +79,12 @@ export default function LogShift() {
           <Field label="Net received (Rs.)" hint={`suggested: ${fmtRs(net)}`}>
             <input type="number" min="0" className="input" value={form.net} onChange={update("net")} required />
           </Field>
-          <div className="col-span-2">
+          <div className="sm:col-span-2">
             <Field label="Note (optional)">
               <textarea className="input" rows={2} value={form.note} onChange={update("note") as any} />
             </Field>
           </div>
-          <div className="col-span-2 flex justify-end">
+          <div className="sm:col-span-2 flex justify-end">
             <button className="btn-primary" disabled={loading}>{loading ? "Saving…" : "Log shift"}</button>
           </div>
         </form>

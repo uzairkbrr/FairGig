@@ -45,7 +45,7 @@ export default function MyShifts() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <h1 className="text-2xl font-bold">My shifts</h1>
         <div className="text-sm text-slate-500">{shifts.length} total</div>
       </div>
