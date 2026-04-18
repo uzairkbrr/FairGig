@@ -32,10 +32,11 @@ services/earnings/uploads/
 .env.local
 .env.*.local
 
-# Editor / OS
+# Editor / OS / AI tooling
 .DS_Store
 .vscode/
 .idea/
+.claude/
 *.swp
 *~
 
