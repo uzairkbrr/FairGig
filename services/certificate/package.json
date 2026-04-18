@@ -1,0 +1,15 @@
+{
+  "name": "fairgig-certificate",
+  "version": "1.0.0",
+  "description": "FairGig income certificate renderer — print-friendly HTML",
+  "private": true,
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": { "start": "node src/server.js", "dev": "node --watch src/server.js" },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "node-fetch": "^2.7.0"
+  }
+}

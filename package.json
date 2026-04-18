@@ -1,0 +1,21 @@
+{
+  "name": "fairgig-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "FairGig — SOFTEC 2026 gig worker income & rights platform",
+  "scripts": {
+    "setup": "node scripts/setup.js",
+    "dev": "concurrently -n auth,earnings,anomaly,grievance,analytics,certificate,frontend -c cyan,green,magenta,yellow,blue,red,white \"npm:dev:auth\" \"npm:dev:earnings\" \"npm:dev:anomaly\" \"npm:dev:grievance\" \"npm:dev:analytics\" \"npm:dev:certificate\" \"npm:dev:frontend\"",
+    "dev:auth": "cd services/auth && python -m uvicorn app.main:app --host 0.0.0.0 --port 4001 --reload",
+    "dev:earnings": "cd services/earnings && python -m uvicorn app.main:app --host 0.0.0.0 --port 4002 --reload",
+    "dev:anomaly": "cd services/anomaly && python -m uvicorn app.main:app --host 0.0.0.0 --port 4003 --reload",
+    "dev:grievance": "cd services/grievance && npm start",
+    "dev:analytics": "cd services/analytics && python -m uvicorn app.main:app --host 0.0.0.0 --port 4005 --reload",
+    "dev:certificate": "cd services/certificate && npm start",
+    "dev:frontend": "cd frontend && npm run dev",
+    "seed": "python seed/seed.py"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

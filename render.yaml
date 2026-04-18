@@ -1,0 +1,165 @@
+# Render Blueprint — one-click deploy for the whole FairGig stack.
+# https://render.com/docs/blueprint-spec
+#
+# Push this repo to GitHub, then in Render:
+#   New + → Blueprint → pick the repo → Apply.
+# Render provisions all 7 services from this file. First deploy takes ~5 min
+# (most of that is pip + npm installs). The free-tier web services sleep
+# after 15 min of inactivity; the first request after sleep cold-starts in
+# ~30 seconds. The static-site frontend is on a CDN and never sleeps.
+#
+# Tip: if Render appends a random suffix to any service name because of a
+# collision, fix the matching *_URL / VITE_*_URL env vars in the dashboard.
+# The service names below are unique enough that this rarely happens.
+
+previewsEnabled: false
+
+services:
+  # --------------------------- auth ---------------------------
+  - type: web
+    name: fairgig-auth
+    runtime: python
+    rootDir: services/auth
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: JWT_SECRET
+        sync: false          # user sets this ONCE in the dashboard; stays consistent across services
+      - key: PYTHON_VERSION
+        value: 3.11.9
+
+  # --------------------------- earnings ---------------------------
+  - type: web
+    name: fairgig-earnings
+    runtime: python
+    rootDir: services/earnings
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: JWT_SECRET
+        sync: false
+      - key: INTERNAL_KEY
+        sync: false
+      - key: AUTH_URL
+        value: https://fairgig-auth.onrender.com
+      - key: PYTHON_VERSION
+        value: 3.11.9
+
+  # --------------------------- anomaly ---------------------------
+  - type: web
+    name: fairgig-anomaly
+    runtime: python
+    rootDir: services/anomaly
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: EARNINGS_URL
+        value: https://fairgig-earnings.onrender.com
+      - key: INTERNAL_KEY
+        sync: false
+      - key: PYTHON_VERSION
+        value: 3.11.9
+
+  # --------------------------- grievance ---------------------------
+  - type: web
+    name: fairgig-grievance
+    runtime: node
+    rootDir: services/grievance
+    plan: free
+    buildCommand: npm install
+    startCommand: node src/server.js
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: JWT_SECRET
+        sync: false
+      - key: INTERNAL_KEY
+        sync: false
+      - key: AUTH_URL
+        value: https://fairgig-auth.onrender.com
+      - key: NODE_VERSION
+        value: 20
+
+  # --------------------------- analytics ---------------------------
+  - type: web
+    name: fairgig-analytics
+    runtime: python
+    rootDir: services/analytics
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: JWT_SECRET
+        sync: false
+      - key: INTERNAL_KEY
+        sync: false
+      - key: AUTH_URL
+        value: https://fairgig-auth.onrender.com
+      - key: EARNINGS_URL
+        value: https://fairgig-earnings.onrender.com
+      - key: GRIEVANCE_URL
+        value: https://fairgig-grievance.onrender.com
+      - key: MIN_COHORT
+        value: "3"
+      - key: PYTHON_VERSION
+        value: 3.11.9
+
+  # --------------------------- certificate ---------------------------
+  - type: web
+    name: fairgig-certificate
+    runtime: node
+    rootDir: services/certificate
+    plan: free
+    buildCommand: npm install
+    startCommand: node src/server.js
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: INTERNAL_KEY
+        sync: false
+      - key: AUTH_URL
+        value: https://fairgig-auth.onrender.com
+      - key: EARNINGS_URL
+        value: https://fairgig-earnings.onrender.com
+      - key: CERT_SIGN_SECRET
+        sync: false
+      - key: NODE_VERSION
+        value: 20
+
+  # --------------------------- frontend (static site) ---------------------------
+  - type: web
+    name: fairgig
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    autoDeploy: true
+    pullRequestPreviewsEnabled: false
+    envVars:
+      - key: VITE_AUTH_URL
+        value: https://fairgig-auth.onrender.com
+      - key: VITE_EARNINGS_URL
+        value: https://fairgig-earnings.onrender.com
+      - key: VITE_ANOMALY_URL
+        value: https://fairgig-anomaly.onrender.com
+      - key: VITE_GRIEVANCE_URL
+        value: https://fairgig-grievance.onrender.com
+      - key: VITE_ANALYTICS_URL
+        value: https://fairgig-analytics.onrender.com
+      - key: VITE_CERTIFICATE_URL
+        value: https://fairgig-certificate.onrender.com
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
